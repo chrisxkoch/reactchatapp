@@ -1,9 +1,8 @@
 
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, ScrollView } from 'react-native';
-// import react Navigation
+import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import KeyboardSpacer from 'react-native-keyboard-spacer';;
 
 // import the screens
 import Start from './components/Start';
