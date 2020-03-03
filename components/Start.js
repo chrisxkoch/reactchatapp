@@ -1,24 +1,22 @@
-
 import React, { Component } from 'react';
 import { StyleSheet, Platform, ImageBackground, Text, TextInput, Alert, TouchableOpacity, Button, View } from 'react-native';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-const firebase = require("firebase");
-require("firebase/firestore");
+import { GiftedChat } from "react-native-gifted-chat";
 
-// create Screen1 (Start) class
-export default class Start extends Component {
-
-  // define state
-  state = {
-    userName: '',
-    backgroundColor: ''
+// Start-Screen
+export default class Start extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      color: ''
+    }
   }
 
-  //render components
   render() {
     return (
       //React Native component ImageBackground 
-      <ImageBackground source={require('../assets/BackgroundImage.png')} style={styles.BackgroundImage}>
+      <ImageBackground source={require('../assets/backgroundImage.png')} style={styles.backImage}>
         <Text style={styles.title}>Chat App</Text>
         <View style={styles.container}>
           <TextInput style={styles.nameBox}
@@ -28,7 +26,7 @@ export default class Start extends Component {
           />
           <Text style={styles.text}>
             Choose Background Color:
-  </Text>
+        </Text>
           <View style={styles.colorSelection}>
             <TouchableOpacity
               onPress={() => this.setState({ color: '#090C08' })}
@@ -52,25 +50,23 @@ export default class Start extends Component {
             title="Start Chatting"
             onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, color: this.state.color })}
           />
-          {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
         </View>
       </ImageBackground>
     );
   }
 }
 
-//stylesheets
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '40%',
-    width: '80%',
+    height: '44%',
+    width: '88%',
     marginBottom: 120
   },
-  BackgroundImage: {
+  backImage: {
     flex: 1,
     alignItems: 'center',
     width: '100%',
