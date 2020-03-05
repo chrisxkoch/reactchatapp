@@ -1,131 +1,113 @@
-import React, { Component } from 'react';
-import { StyleSheet, Platform, ImageBackground, Text, TextInput, Alert, TouchableOpacity, Button, View } from 'react-native';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { GiftedChat } from "react-native-gifted-chat";
 
-// Start-Screen
-export default class Start extends React.Component {
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+import React, { Component } from 'react';
+//import relevant components from react native
+import { StyleSheet, Text, View, TextInput, Button, ImageBackground, TouchableOpacity, } from 'react-native';
+
+// Starting Screen
+export default class Start extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: '',
-      color: ''
-    }
+    this.state = { name: '' }
   }
 
   render() {
     return (
-      //React Native component ImageBackground 
-      <ImageBackground source={require('../assets/backgroundImage.png')} style={styles.backImage}>
-        <Text style={styles.title}>Chat App</Text>
+      <ImageBackground source={require('../assets/chatBackground.png')} style={styles.backgroundImage}>
+
+        <Text style={styles.title}>The Chat App</Text>
         <View style={styles.container}>
-          <TextInput style={styles.nameBox}
-            onChangeText={(name) => this.setState({ name })}
-            value={this.state.name}
-            placeholder='Your Name'
-          />
-          <Text style={styles.text}>
-            Choose Background Color:
-        </Text>
-          <View style={styles.colorSelection}>
-            <TouchableOpacity
-              onPress={() => this.setState({ color: '#090C08' })}
-              style={[styles.colorButton, styles.color1]}
-            />
-            <TouchableOpacity
-              onPress={() => this.setState({ color: '#474056' })}
-              style={[styles.colorButton, styles.color2]}
-            />
-            <TouchableOpacity
-              onPress={() => this.setState({ color: '#8A95A5' })}
-              style={[styles.colorButton, styles.color3]}
-            />
-            <TouchableOpacity
-              onPress={() => this.setState({ color: '#ff6d0c' })}
-              style={[styles.colorButton, styles.color4]}
+          <View style={styles.triContainer}>
+            <View style={styles.containerTriFlex}>
+              <TextInput
+                style={styles.yourNameInput}
+                onChangeText={(name) => this.setState({ name })}
+                value={this.state.name}
+                placeholder='Your name'
+              />
+            </View>
+            <Text>Pick your background!</Text>
+            <View style={styles.colorButtonContainer}>
+              <TouchableOpacity style={[styles.colorButton, styles.brown]} onPress={() => this.setState({ color: '#99847B' })}></TouchableOpacity>
+              <TouchableOpacity style={[styles.colorButton, styles.red]} onPress={() => this.setState({ color: '#CB8C9D' })}></TouchableOpacity>
+              <TouchableOpacity style={[styles.colorButton, styles.blue]} onPress={() => this.setState({ color: '#B8CECD' })}></TouchableOpacity>
+              <TouchableOpacity style={[styles.colorButton, styles.yellow]} onPress={() => this.setState({ color: '#DAE362' })}></TouchableOpacity>
+            </View>
+            <Button
+              title='Start Chatting'
+              color='#CFB8B9'
+              style={[styles.containerTriFlex, styles.startChattingButton]}
+              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, color: this.state.color })}
             />
           </View>
-          <Button
-            style={styles.button}
-            title="Start Chatting"
-            onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, color: this.state.color })}
-          />
         </View>
       </ImageBackground>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  title: {
+    fontSize: 45,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginBottom: 100,
+  },
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+  yourNameInput: {
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#757083',
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    flex: .5,
+    marginTop: 5,
+  },
+  triContainer: {
     flex: 1,
+    margin: 10,
+  },
+  containerTriFlex: {
+    flex: 3,
+  },
+  container: {
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     height: '44%',
     width: '88%',
-    marginBottom: 120
+    padding: 10,
   },
-  backImage: {
-    flex: 1,
-    alignItems: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  nameBox: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: '#000000',
-    borderWidth: 1,
-    borderColor: 'grey',
-    marginBottom: 30,
-    marginTop: 30,
-    width: '88%'
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "300",
-    color: '#757083'
-  },
-  title: {
-    flex: 1,
-    alignItems: 'center',
-    fontSize: 45,
-    fontWeight: "600",
-    color: '#FFFFFF',
-    marginTop: 75,
-  },
-  colorSelection: {
-    flex: 4,
+  colorButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    margin: 15
+    flex: 3,
   },
   colorButton: {
-    height: 35,
-    width: 35,
-    borderRadius: 70,
-    margin: 20
+    width: 50,
+    height: 50,
+    margin: 5,
+    borderRadius: 25,
   },
-  color1: {
-    backgroundColor: '#090C08'
-  },
-  color2: {
-    backgroundColor: '#474056'
-  },
-  color3: {
-    backgroundColor: '#8A95A5'
-  },
-  color4: {
-    backgroundColor: '#ff6d0c'
-  },
-  button: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: '#FFFFFF',
-    backgroundColor: '#757083',
+  startChattingButton: {
+    backgroundColor: '#CFB8B9',
     width: '88%',
-    marginBottom: 30
-  }
-});
+  },
+  brown: {
+    backgroundColor: '#99847B'
+  },
+  red: {
+    backgroundColor: '#CB8C9D'
+  },
+  blue: {
+    backgroundColor: '#B8CECD'
+  },
+  yellow: {
+    backgroundColor: '#DAE362'
+  },
+
+})

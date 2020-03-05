@@ -1,23 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import relevant components from react native
-import { StyleSheet, Text, View, Platform, AsyncStorage } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
+import { StyleSheet, Text, View, Platform, AsyncStorage } from "react-native";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+//import custom CustomActions
+import CustomActions from "./CustomActions";
+//import MapView
+import MapView from "react-native-maps";
+
 // create Screen2 (Chat) class
 //import firebase
-const firebase = require('firebase');
-require('firebase/firestore');
+const firebase = require("firebase");
+require("firebase/firestore");
 
 // create Screen2 (Chat) class
 export default class Chat extends Component {
-
   constructor() {
     super();
 
     if (!firebase.apps.length) {
       firebase.initializeApp({
-
         apiKey: "AIzaSyAmG0c_F_AOdIv9kUX8vEJ9DTwHwu6-HfM",
         authDomain: "test-37279.firebaseapp.com",
         databaseURL: "https://test-37279.firebaseio.com",
@@ -26,24 +29,25 @@ export default class Chat extends Component {
         messagingSenderId: "302272369863",
         appId: "1:302272369863:web:e0b5ce7857eddd38901ae2",
         measurementId: "G-S8BWCKJGF6"
+
       });
     }
 
-
-    this.referenceChatMessages = firebase.firestore().collection('messages');
+    this.referenceChatMessages = firebase.firestore().collection("messages");
 
     this.state = {
       messages: [],
       uid: 0,
-      isConnected: false
+      isConnected: false,
+      image: null
     };
   }
 
   // get messages from asyncStorage
-  async getMessages() {
-    let messages = '';
+  getMessages = async () => {
+    let messages = "";
     try {
-      messages = await AsyncStorage.getItem('messages') || [];
+      messages = (await AsyncStorage.getItem("messages")) || [];
       this.setState({
         messages: JSON.parse(messages)
       });
@@ -53,45 +57,76 @@ export default class Chat extends Component {
   };
 
   // save messages in asyncStorage
-  async saveMessages() {
+  saveMessages = async () => {
     try {
-      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+      await AsyncStorage.setItem(
+        "messages",
+        JSON.stringify(this.state.messages)
+      );
     } catch (error) {
       console.log(error.message);
     }
   };
 
   // delete messages from asyncStorage
-  async deleteMessages() {
+  deleteMessages = async () => {
     try {
-      await AsyncStorage.removeItem('messages');
+      await AsyncStorage.removeItem("messages");
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
+  // componentDidMount is a "lifecycle method". Lifecycle methods run the
+  // function at various times during a component's "lifecycle". For example
+  // componentDidMount will run right after the component was added to the page.
   componentDidMount() {
-    NetInfo.isConnected.fetch().then(isConnected => {
+    // const doGreeting = (name) => {
+    //   alert('Hi ' + name);
+    // }
+    // doGreeting('Cilvin')
+    // NetInfo.addEventListener(state => {
+    //   doGreeting('Luke')
+    // });
+
+    // NetInfo is a library that gives you access to the current network status
+    // of the user's device. For example, are we connected or disconnected from
+    // the network.
+
+    // .addEventListener registers a function to be called whenever an "event"
+    // happens, which in this case would be when the connectivity status
+    // changes. The function you give to addEventListener will be called with
+    // the "state" object, which has properties on it like "isConnected".
+    NetInfo.addEventListener(state => {
+      this.handleConnectivityChange(state);
+    });
+
+    NetInfo.fetch().then(state => {
+      const isConnected = state.isConnected;
       if (isConnected) {
         this.setState({
-          isConnected: false,
+          isConnected: true
         });
 
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
-          if (!user) {
-            firebase.auth().signInAnonymously();
-          }
+        this.authUnsubscribe = firebase
+          .auth()
+          .onAuthStateChanged(async user => {
+            if (!user) {
+              await firebase.auth().signInAnonymously();
+            }
 
-          this.setState({
-            uid: user.uid,
-            messages: []
+            this.setState({
+              uid: user.uid,
+              messages: []
+            });
+
+            this.unsubscribe = this.referenceChatMessages
+              .orderBy("createdAt", "desc")
+              .onSnapshot(this.onCollectionUpdate);
           });
-
-          this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
-        });
       } else {
         this.setState({
-          isConnected: false,
+          isConnected: false
         });
 
         this.getMessages();
@@ -101,83 +136,140 @@ export default class Chat extends Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-  };
+    this.authUnsubscribe();
 
-  onCollectionUpdate = (querySnapshot) => {
+    NetInfo.isConnected.removeEventListener(
+      "connectionChange",
+      this.handleConnectivityChange
+    );
+  }
+
+  onCollectionUpdate = querySnapshot => {
     const messages = [];
     // go through each document
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(doc => {
       // get the QueryDocumentSnapshot's data
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
-        user: data.user
+        user: data.user,
+        image: data.image || null,
+        location: data.location || null
       });
     });
 
     this.setState({
-      messages,
+      messages
     });
   };
 
-  addMessage() {
+  handleConnectivityChange = state => {
+    const isConnected = state.isConnected;
+    if (isConnected == true) {
+      this.setState({
+        isConnected: true
+      });
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);
+    } else {
+      this.setState({
+        isConnected: false
+      });
+    }
+  };
+
+  addMessage = () => {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
       _id: message._id,
-      text: message.text,
+      text: message.text || "",
       createdAt: message.createdAt,
-      user: message.user
+      user: message.user,
+      image: message.image || null,
+      location: message.location || null
     });
   }
   //define title in navigation bar
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.state.params.userName,
+      title: `${navigation.state.params.userName}'s Chat`,
     };
   };
 
   //appending new message to messages object
-  onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }), () => {
-      this.addMessage();
-      this.saveMessages();
-    });
-  };
+  onSend = (messages = []) => {
+    this.setState(
+      previousState => ({
+        messages: GiftedChat.append(previousState.messages, messages)
+      }),
+      () => {
+        this.addMessage();
+        this.saveMessages();
+      }
+    );
+  }
 
   // hide inputbar when offline
-  renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
+  renderInputToolbar = (props) => {
+    console.log("renderInputToolbar --> props", props.isConnected);
+    if (props.isConnected === false) {
     } else {
+      return <InputToolbar {...props} />;
+    }
+  }
+
+  //display the communication features
+  renderCustomActions = props => {
+    return <CustomActions {...props} />;
+  };
+
+  //custom map view
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
       return (
-        <InputToolbar
-          {...props}
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
         />
       );
     }
-  };
+    return null;
+  }
 
   //render components
   render() {
     return (
       //fullscreen component
-      <View style={{ flex: 1, backgroundColor: this.props.navigation.state.params.backgroundColor }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.props.navigation.state.params.backgroundColor
+        }}
+      >
         <GiftedChat
           messages={this.state.messages}
+          isConnected={this.state.isConnected}
+          renderInputToolbar={this.renderInputToolbar}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
           onSend={messages => this.onSend(messages)}
           user={{
             _id: this.state.uid
           }}
         />
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+        {Platform.OS === "android" ? <KeyboardSpacer /> : null}
       </View>
     );
   }
-};
+}
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
