@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 2773,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "packagerPid": 1355,
+  "expoServerNgrokUrl": "https://di-j9k.anonymous.reactnatchat.exp.direct",
+  "packagerNgrokUrl": "https://packager.di-j9k.anonymous.reactnatchat.exp.direct",
+  "ngrokPid": 1366,
   "webpackServerPort": 19006
 }
