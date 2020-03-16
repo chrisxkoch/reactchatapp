@@ -25,54 +25,54 @@ export default class Start extends Component {
   render() {
     return (
 
-      <ImageBackground source={require('../assets/Background-Image.png')} style={styles.backgroundImage}>
-        {/*App title*/}
-        <Text style={styles.appTitle}>ChatApp</Text>
-        {/*login container*/}
-        <View style={styles.logIn}>
-          {/*textinput form*/}
-          <TextInput
-            style={styles.userNameInput}
-            onChangeText={(userName) => this.setState({ userName })}
-            value={this.state.userName}
-            placeholder='Your Name...'
-          />
-          {/*choose backgroundcolor*/}
-          <Text style={styles.choseBackgroundColor}>Choose Background Color:</Text>
-          {/*wrapper for the different available background colors*/}
-          <View style={styles.backgroundColorWrapper}>
-            {/*black*/}
-            <TouchableOpacity onPress={() => { this.setState({ backgroundColor: '#090C08' }) }}>
-              <View style={[styles.backgroundColor, styles.black]} >
-              </View>
-            </TouchableOpacity>
-            {/*purple*/}
-            <TouchableOpacity onPress={() => { this.setState({ backgroundColor: '#474056' }) }}>
-              <View style={[styles.backgroundColor, styles.purple]}>
-              </View>
-            </TouchableOpacity>
-            {/*gray*/}
-            <TouchableOpacity onPress={() => { this.setState({ backgroundColor: '#8A95A5' }) }}>
-              <View style={[styles.backgroundColor, styles.gray]}>
-              </View>
-            </TouchableOpacity>
-            {/*green*/}
-            <TouchableOpacity onPress={() => { this.setState({ backgroundColor: '#B9C6AE' }) }}>
-              <View style={[styles.backgroundColor, styles.green]}>
-              </View>
-            </TouchableOpacity>
+        <ImageBackground source={require('../assets/Background-Image.png')} style={styles.backgroundImage}>
+          {/*App title*/}
+          <Text style={styles.appTitle}>ChatApp</Text>
+          {/*login container*/}
+          <View style={styles.logIn}>
+            {/*textinput form*/}
+            <TextInput
+              style={styles.userNameInput}
+              onChangeText={(userName) => this.setState({userName})}
+              value={this.state.userName}
+              placeholder='Your Name...'
+            />
+            {/*choose backgroundcolor*/}
+            <Text style={styles.choseBackgroundColor}>Choose Background Color:</Text>
+            {/*wrapper for the different available background colors*/}
+            <View style={styles.backgroundColorWrapper}>
+              {/*black*/}
+              <TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#090C08' }) }}>
+                <View style={[styles.backgroundColor, styles.black]} >
+                </View>
+              </TouchableOpacity>
+              {/*purple*/}
+              <TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#474056' }) }}>
+                <View style={[styles.backgroundColor, styles.purple]}>
+                </View>
+              </TouchableOpacity>
+              {/*gray*/}
+              <TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#8A95A5' }) }}>
+                <View style={[styles.backgroundColor, styles.gray]}>
+                </View>
+              </TouchableOpacity>
+              {/*green*/}
+              <TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#B9C6AE' }) }}>
+                <View style={[styles.backgroundColor, styles.green]}>
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/*start chatting button --> directs you to conversation screen*/}
+            <Button
+              onPress={() => {
+                this.props.navigation.navigate('Chat', { userName: this.state.userName, backgroundColor: this.state.backgroundColor });
+              }}
+              title="Start Chatting"
+              color = '#757083'
+              style={styles.startChatButton}
+            />
           </View>
-          {/*start chatting button --> directs you to conversation screen*/}
-          <Button
-            onPress={() => {
-              this.props.navigation.navigate('Chat', { userName: this.state.userName, backgroundColor: this.state.backgroundColor });
-            }}
-            title="Start Chatting"
-            color='#757083'
-            style={styles.startChatButton}
-          />
-        </View>
-      </ImageBackground>
+        </ImageBackground>
     );
   }
 }
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   backgroundColor: {
     height: 40,
     width: 40,
-    borderRadius: 40 / 2,
+    borderRadius: 40/2,
     marginLeft: 15
   },
   black: {

@@ -1,13 +1,42 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: Source: Chat.js</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+  <div id="main">
+
+    <h1 class="page-title">Source: Chat.js</h1>
+
+
+
+
+
+
+    <section>
+      <article>
+        <pre class="prettyprint source linenums"><code>/**
  * @description this is the chatscreen, where the user can write and sent
  * messages, images or geo-location
  * @class Chat
  * @requires React
  * @requires React-Native
- * @requires Keyboard-Spacer
+ * @requires Keyboard Spacer
  * @requires React-Native-Gifted-Chat
- * @requires CustomActions
- * @requires React-Native-Maps
+ * @requires Custom Actions
+ * @requires React Native Maps
  * @requires Firebase
  * @requires Firestore
  */
@@ -48,14 +77,13 @@ export default class Chat extends Component {
 
     if (!firebase.apps.length) {
       firebase.initializeApp({
-        apiKey: "AIzaSyAmG0c_F_AOdIv9kUX8vEJ9DTwHwu6-HfM",
-        authDomain: "test-37279.firebaseapp.com",
-        databaseURL: "https://test-37279.firebaseio.com",
-        projectId: "test-37279",
-        storageBucket: "test-37279.appspot.com",
-        messagingSenderId: "302272369863",
-        appId: "1:302272369863:web:e0b5ce7857eddd38901ae2",
-        measurementId: "G-S8BWCKJGF6"
+        apiKey: "AIzaSyA5LJNBLFMVgZTWvfH73fqRaiFLwCOjWmM",
+        authDomain: "test-d614c.firebaseapp.com",
+        databaseURL: "https://test-d614c.firebaseio.com",
+        projectId: "test-d614c",
+        storageBucket: "test-d614c.appspot.com",
+        messagingSenderId: "799483602316",
+        appId: "1:799483602316:web:0eaaf90d0b214244b822a9"
       });
     }
 
@@ -71,9 +99,8 @@ export default class Chat extends Component {
 
   /**
    * loads all messages from AsyncStorage
-   * @function getMessages 
    * @async
-   * @return {Promise<string>} The data from the storage
+   * @return {Promise&lt;string>} The data from the storage
    */
   getMessages = async () => {
     let messages = "";
@@ -89,7 +116,6 @@ export default class Chat extends Component {
 
   /**
    * saves all messages from AsyncStorage
-   * @function saveMessages 
    * @async
    */
   saveMessages = async () => {
@@ -105,7 +131,6 @@ export default class Chat extends Component {
 
   /**
    * deletes all messages from AsyncStorage
-   * @function deleteMessages
    * @async
    */
 
@@ -124,7 +149,7 @@ export default class Chat extends Component {
     // const doGreeting = (name) => {
     //   alert('Hi ' + name);
     // }
-    // doGreeting('Cilvin')
+    // doGreeting('Chris')
     // NetInfo.addEventListener(state => {
     //   doGreeting('Luke')
     // });
@@ -286,30 +311,24 @@ export default class Chat extends Component {
     );
   };
 
-  /**
-   * hides inputbar when offline
-   * @function renderInputToolbar
-   */
+  // hide inputbar when offline
   renderInputToolbar = props => {
     console.log("renderInputToolbar --> props", props.isConnected);
     if (props.isConnected === false) {
     } else {
-      return <InputToolbar {...props} />;
+      return &lt;InputToolbar {...props} />;
     }
   };
 
-  /**
-   * displays the communication features
-   * @function renderCustomActions
-   */
-  renderCustomActions = props => <CustomActions {...props} />;
+  //display the communication features
+  renderCustomActions = props => &lt;CustomActions {...props} />;
 
   //custom map view
   renderCustomView(props) {
     const { currentMessage } = props;
     if (currentMessage.location) {
       return (
-        <MapView
+        &lt;MapView
           style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
           region={{
             latitude: currentMessage.location.latitude,
@@ -327,13 +346,13 @@ export default class Chat extends Component {
   render() {
     return (
       //fullscreen component
-      <View
+      &lt;View
         style={{
           flex: 1,
           backgroundColor: this.props.navigation.state.params.backgroundColor
         }}
       >
-        <GiftedChat
+        &lt;GiftedChat
           messages={this.state.messages}
           isConnected={this.state.isConnected}
           renderInputToolbar={this.renderInputToolbar}
@@ -344,10 +363,49 @@ export default class Chat extends Component {
             _id: this.state.uid
           }}
         />
-        {Platform.OS === "android" ? <KeyboardSpacer /> : null}
-      </View>
+        {Platform.OS === "android" ? &lt;KeyboardSpacer /> : null}
+      &lt;/View>
     );
   }
 }
 
 const styles = StyleSheet.create({});
+</code></pre>
+      </article>
+    </section>
+
+
+
+
+  </div>
+
+  <nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Classes</h3>
+    <ul>
+      <li><a href="Chat.html">Chat</a></li>
+      <li><a href="CustomActions.html">CustomActions</a></li>
+      <li><a href="Start.html">Start</a></li>
+    </ul>
+    <h3>Global</h3>
+    <ul>
+      <li><a href="global.html#addMessage">addMessage</a></li>
+      <li><a href="global.html#handleConnectivityChange">handleConnectivityChange</a></li>
+      <li><a href="global.html#onActionPress">onActionPress</a></li>
+      <li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li>
+      <li><a href="global.html#onSend">onSend</a></li>
+    </ul>
+  </nav>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Mar 06 2020 18:15:24
+    GMT-0800 (Pacific Standard Time)
+  </footer>
+
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
+</body>
+
+</html>
